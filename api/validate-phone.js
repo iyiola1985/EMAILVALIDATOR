@@ -1,30 +1,26 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { verifyKey } from "./middleware";
+import { verifyKey } from "./verifyKey.js";
 
 export default function handler(req, res) {
-  if (req.method !== "POST") {
+  if (req.method !== "POST")
     return res.status(405).json({ error: "Method not allowed" });
-  }
 
-  // 🔐 Verify key
-  const auth = verifyKey(req, res);
-  if (auth !== true) return;
+  if (!verifyKey(req, res)) return;
 
   const { phone } = req.body;
-  if (!phone)
-    return res.status(400).json({ error: "Phone number is required" });
+  if (!phone) return res.status(400).json({ error: "Phone number is required" });
 
   const phoneData = parsePhoneNumberFromString(phone);
 
   if (!phoneData) {
-    return res.json({
+    return res.status(200).json({
       phone,
       isValid: false,
       message: "Invalid phone number format",
     });
   }
 
-  res.json({
+  res.status(200).json({
     phone,
     isValid: phoneData.isValid(),
     country: phoneData.country,
