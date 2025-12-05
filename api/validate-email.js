@@ -1,12 +1,17 @@
 import validator from "validator";
 import dns from "dns";
+import { verifyKey } from "./middleware";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST")
+  if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  // 🔐 Verify key
+  const auth = verifyKey(req, res);
+  if (auth !== true) return;
 
   const { email } = req.body;
-
   if (!email) return res.status(400).json({ error: "Email is required" });
 
   const isValidFormat = validator.isEmail(email);
@@ -20,7 +25,6 @@ export default async function handler(req, res) {
         else resolve(addresses);
       });
     });
-
     hasMX = records.length > 0;
   } catch {
     hasMX = false;

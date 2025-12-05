@@ -1,0 +1,12 @@
+[
+  {
+    "key": "ABC123-TEST-KEY",
+    "limit": 20000,
+    "used": 0
+  },
+  {
+    "key": "XYZ456-ENTERPRISE",
+    "limit": 100000,
+    "used": 0
+  }
+]
