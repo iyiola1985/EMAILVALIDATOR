@@ -2,16 +2,11 @@
   "name": "validator-api",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "dependencies": {
     "libphonenumber-js": "^1.12.29",
     "validator": "^13.15.23"
   },
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "scripts": {
+    "start": "vercel dev"
+  }
 }

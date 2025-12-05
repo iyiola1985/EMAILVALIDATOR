@@ -1,11 +1,9 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { verifyKey } from "./verifyKey.js";
 
 export default function handler(req, res) {
-  if (req.method !== "POST")
+  if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
-
-  if (!verifyKey(req, res)) return;
+  }
 
   const { phone } = req.body;
   if (!phone) return res.status(400).json({ error: "Phone number is required" });
@@ -16,7 +14,7 @@ export default function handler(req, res) {
     return res.status(200).json({
       phone,
       isValid: false,
-      message: "Invalid phone number format",
+      message: "Invalid phone number format"
     });
   }
 
@@ -25,6 +23,6 @@ export default function handler(req, res) {
     isValid: phoneData.isValid(),
     country: phoneData.country,
     internationalFormat: phoneData.formatInternational(),
-    nationalFormat: phoneData.formatNational(),
+    nationalFormat: phoneData.formatNational()
   });
 }
