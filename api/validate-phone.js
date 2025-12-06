@@ -1,28 +1,42 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
 
-export default function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+export default async function handler(req, res) {
+
+  // --------------------------
+  // CORS HEADERS
+  // --------------------------
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
+  if (req.method !== "POST")
+    return res.status(405).json({ error: "Method not allowed" });
+
   const { phone } = req.body;
-  if (!phone) return res.status(400).json({ error: "Phone number is required" });
+
+  if (!phone) {
+    return res.status(400).json({ error: "Phone number is required" });
+  }
 
   const phoneData = parsePhoneNumberFromString(phone);
 
   if (!phoneData) {
-    return res.status(200).json({
+    return res.json({
       phone,
       isValid: false,
-      message: "Invalid phone number format"
+      message: "Invalid phone number format",
     });
   }
 
-  res.status(200).json({
+  res.json({
     phone,
     isValid: phoneData.isValid(),
     country: phoneData.country,
     internationalFormat: phoneData.formatInternational(),
-    nationalFormat: phoneData.formatNational()
+    nationalFormat: phoneData.formatNational(),
   });
 }
